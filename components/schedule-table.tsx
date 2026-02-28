@@ -85,7 +85,7 @@ export function ScheduleTable({
         <TableBody>
           {names.map((name) => (
             <TableRow key={name}>
-              <TableCell className="sticky left-0 z-5 bg-background font-bold text-center text-xs whitespace-nowrap">
+              <TableCell className="sticky left-0 z-[5] bg-background font-bold text-center text-xs whitespace-nowrap">
                 {name}
               </TableCell>
               {dateRange.map((date) => {
