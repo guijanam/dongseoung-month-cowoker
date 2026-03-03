@@ -23,6 +23,10 @@ export function ScheduleViewer() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [holidays, setHolidays] = useState<Set<string>>(new Set());
+  const [maintenance, setMaintenance] = useState<{
+    is_active: boolean;
+    message: string;
+  } | null>(null);
 
   const fetchSchedule = useCallback(async (start: string, end: string) => {
     setIsLoading(true);
@@ -69,6 +73,19 @@ export function ScheduleViewer() {
   }, []);
 
   useEffect(() => {
+    supabase
+      .from("maintenance")
+      .select("is_active, message")
+      .eq("id", 1)
+      .single()
+      .then(({ data }) => {
+        if (data?.is_active) {
+          setMaintenance(data);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
     const { start, end } = computeInitialRange();
     fetchSchedule(start, end);
   }, [fetchSchedule]);
@@ -103,6 +120,18 @@ export function ScheduleViewer() {
       return `"${selectedTab}" 탭의 데이터가 없습니다.`;
     return null;
   }, [isLoading, error, allData.length, names.length, searchFilter, selectedTab]);
+
+  if (maintenance) {
+    return (
+      <div className="flex items-center justify-center h-dvh px-6">
+        <div className="text-center space-y-4">
+          <div className="text-4xl">🔧</div>
+          <h1 className="text-lg font-bold text-foreground">점검 중</h1>
+          <p className="text-sm text-muted-foreground">{maintenance.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-dvh">
