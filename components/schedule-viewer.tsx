@@ -106,7 +106,7 @@ export function ScheduleViewer() {
     fetchSchedule(range.start, range.end);
   }, [monthValue, fetchSchedule]);
 
-  const { names, scheduleMap } = useMemo(
+  const { names, scheduleMap, leaveNames } = useMemo(
     () => buildScheduleMap(allData, selectedTab, searchFilter),
     [allData, selectedTab, searchFilter]
   );
@@ -148,6 +148,7 @@ export function ScheduleViewer() {
           names={names}
           dateRange={dateRange}
           scheduleMap={scheduleMap}
+          leaveNames={leaveNames}
           isLoading={isLoading}
           error={error}
           emptyMessage={emptyMessage}

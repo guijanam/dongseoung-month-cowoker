@@ -81,7 +81,11 @@ export function buildScheduleMap(
   data: ScheduleRecord[],
   position: string,
   searchFilter: string
-): { names: string[]; scheduleMap: Map<string, Map<string, string>> } {
+): {
+  names: string[];
+  scheduleMap: Map<string, Map<string, string>>;
+  leaveNames: Set<string>;
+} {
   const trimmedPosition = position.trim();
   const search = searchFilter.trim().toLowerCase();
 
@@ -92,9 +96,13 @@ export function buildScheduleMap(
   );
 
   const nameMap = new Map<string, Map<string, string>>();
+  const leaveNames = new Set<string>();
   for (const item of filtered) {
     if (!nameMap.has(item.name)) {
       nameMap.set(item.name, new Map());
+    }
+    if (item.leave) {
+      leaveNames.add(item.name);
     }
     const dateStr = item.date ? format(new Date(item.date), "yyyy-MM-dd") : "";
     if (dateStr) {
@@ -103,5 +111,5 @@ export function buildScheduleMap(
   }
 
   const names = [...nameMap.keys()].sort();
-  return { names, scheduleMap: nameMap };
+  return { names, scheduleMap: nameMap, leaveNames };
 }

@@ -16,6 +16,7 @@ interface ScheduleTableProps {
   names: string[];
   dateRange: string[];
   scheduleMap: Map<string, Map<string, string>>;
+  leaveNames: Set<string>;
   isLoading: boolean;
   error: string | null;
   emptyMessage: string | null;
@@ -26,6 +27,7 @@ export function ScheduleTable({
   names,
   dateRange,
   scheduleMap,
+  leaveNames,
   isLoading,
   error,
   emptyMessage,
@@ -85,7 +87,12 @@ export function ScheduleTable({
         <TableBody>
           {names.map((name) => (
             <TableRow key={name}>
-              <TableCell className="sticky left-0 z-[5] bg-background font-bold text-center text-xs whitespace-nowrap">
+              <TableCell
+                className={cn(
+                  "sticky left-0 z-[5] bg-background font-bold text-center text-xs whitespace-nowrap",
+                  leaveNames.has(name) && "opacity-40"
+                )}
+              >
                 {name}
               </TableCell>
               {dateRange.map((date) => {
